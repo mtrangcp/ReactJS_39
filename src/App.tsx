@@ -1,10 +1,10 @@
 import "./App.css";
-import Bai1 from "./components/Bai1";
+import Bai3 from "./components/Bai3";
 
 function App() {
   return (
     <>
-      <Bai1 />
+      <Bai3 />
     </>
   );
 }
