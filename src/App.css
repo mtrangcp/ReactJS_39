@@ -1,0 +1,15 @@
+.ss1 {
+  display: flex;
+  gap: 20px;
+}
+.ss1-ctn {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+}
+
+.ss1-ctn img {
+  width: 300px;
+  height: 300px;
+  object-fit: cover;
+}
