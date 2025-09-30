@@ -33,15 +33,14 @@ export default function Bai3() {
     setProAdd({ ...proAdd, [name]: name === "price" ? Number(value) : value });
   };
 
-  // Upload ảnh lên Cloudinary
   const handleUploadImage = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
     const formData = new FormData();
     formData.append("file", file);
-    formData.append("upload_preset", "mtrang_ss39"); // thay bằng preset của bạn
-    formData.append("cloud_name", "dttookk0w"); // thay bằng cloud_name của bạn
+    formData.append("upload_preset", "mtrang_ss39");
+    formData.append("cloud_name", "dttookk0w");
 
     try {
       setIsUploading(true);
