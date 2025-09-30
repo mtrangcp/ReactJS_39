@@ -2,36 +2,42 @@ import axios from "axios";
 import React, { useState } from "react";
 
 export default function Bai1() {
-  const [file, setFile] = useState<null>(null);
-  const [imgRes, setImgRes] = useState<string>("");
+  const [files, setFiles] = useState<File[]>([]);
+  const [imgReses, setImgRes] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const handleChangeFile = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFile(e.target.files[0]);
+    const fileList = e.target.files;
+    if (fileList) {
+      setFiles(Array.from(fileList));
+    }
   };
 
   const handleClick = async () => {
-    if (!file) {
+    if (files.length === 0) {
       alert("Vui long chon file");
       return;
     }
 
-    const formData = new FormData();
-    formData.append("file", file);
-    formData.append("upload_preset", "mtrang_ss39");
-    formData.append("cloud_name", "dttookk0w");
-
     try {
       setIsLoading(true);
-      const res = await axios.post(
-        "https://api.cloudinary.com/v1_1/dttookk0w/image/upload",
-        formData
-      );
-      console.log("Res: ", res);
 
-      if (res.status === 200) {
-        setImgRes(res.data.secure_url);
-      }
+      const uploadPromises = files.map(async (file) => {
+        const formData = new FormData();
+        formData.append("file", file);
+        formData.append("upload_preset", "mtrang_ss39");
+        formData.append("cloud_name", "dttookk0w");
+
+        const res = await axios.post(
+          "https://api.cloudinary.com/v1_1/dttookk0w/image/upload",
+          formData
+        );
+
+        return res.data.secure_url;
+      });
+
+      const results = await Promise.all(uploadPromises);
+      setImgRes(results);
     } catch (error) {
       console.error("Error: ", error);
     } finally {
@@ -42,11 +48,19 @@ export default function Bai1() {
   return (
     <div className="ss1-ctn">
       <div className="ss1">
-        <input type="file" onChange={handleChangeFile} />
+        <input type="file" multiple onChange={handleChangeFile} />
 
         <button onClick={handleClick}>Upload</button>
       </div>
-      {isLoading ? <div>Dang tai anh....</div> : <img src={imgRes} alt="anh" />}
+      {isLoading ? (
+        <div>Dang tai anh....</div>
+      ) : (
+        <div>
+          {imgReses.map((url, idx) => (
+            <img key={idx} src={url} alt={`anh-${idx}`} width={200} />
+          ))}
+        </div>
+      )}
     </div>
   );
 }
